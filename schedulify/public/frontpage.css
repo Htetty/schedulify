@@ -1,0 +1,510 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+@keyframes move {
+  100% {
+      transform: translate3d(0, 0, 1px) rotate(360deg);
+  }
+}
+
+.background {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background: whitesmoke;
+  overflow: hidden;
+}
+
+.background span {
+  width: 50vmin;
+  height: 50vmin;
+  border-radius: 50vmin;
+  backface-visibility: hidden;
+  position: absolute;
+  animation: move;
+  animation-duration: 45;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+
+.background span:nth-child(0) {
+  color: #4385f3;
+  top: 2%;
+  left: 88%;
+  animation-duration: 24s;
+  animation-delay: -2s;
+  transform-origin: 7vw 21vh;
+  box-shadow: 100vmin 0 12.519259363528331vmin currentColor;
+}
+.background span:nth-child(1) {
+  color: #fdc44a;
+  top: 12%;
+  left: 80%;
+  animation-duration: 34s;
+  animation-delay: -31s;
+  transform-origin: -11vw 11vh;
+  box-shadow: 100vmin 0 12.57249878526276vmin currentColor;
+}
+.background span:nth-child(2) {
+  color: #ff0000;
+  top: 10%;
+  left: 71%;
+  animation-duration: 16s;
+  animation-delay: -22s;
+  transform-origin: -9vw -13vh;
+  box-shadow: -100vmin 0 12.901998885834029vmin currentColor;
+}
+.background span:nth-child(3) {
+  color: #4385f3;
+  top: 30%;
+  left: 1%;
+  animation-duration: 49s;
+  animation-delay: -24s;
+  transform-origin: -15vw -5vh;
+  box-shadow: 100vmin 0 12.862004763198485vmin currentColor;
+}
+.background span:nth-child(4) {
+  color: #ff0000;
+  top: 23%;
+  left: 80%;
+  animation-duration: 55s;
+  animation-delay: -37s;
+  transform-origin: -16vw 20vh;
+  box-shadow: 100vmin 0 12.703148125509324vmin currentColor;
+}
+.background span:nth-child(5) {
+  color: #ff0000;
+  top: 70%;
+  left: 51%;
+  animation-duration: 41s;
+  animation-delay: -44s;
+  transform-origin: -15vw -5vh;
+  box-shadow: -100vmin 0 12.54158095662213vmin currentColor;
+}
+.background span:nth-child(6) {
+  color: #4385f3;
+  top: 92%;
+  left: 86%;
+  animation-duration: 30s;
+  animation-delay: -44s;
+  transform-origin: -5vw 1vh;
+  box-shadow: -100vmin 0 13.266862527160638vmin currentColor;
+}
+.background span:nth-child(7) {
+  color: #4385f3;
+  top: 55%;
+  left: 29%;
+  animation-duration: 40s;
+  animation-delay: -35s;
+  transform-origin: -12vw -24vh;
+  box-shadow: 100vmin 0 13.319501706357062vmin currentColor;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  width: 90%;
+  height: 90%;
+  max-width: 1200px;
+  background-color: rgba(255, 255, 255, 0%);
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
+}
+
+.calenderBg1 {
+  translate: -1px 75px;
+  position: absolute;
+  z-index: -1;
+  background-color: red;
+  opacity: 60%;
+  width: 1160px;
+  height: 20px;
+}
+
+.calenderBg2 {
+  translate: -1px 95px;
+  position: absolute;
+  z-index: -1;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.5);
+  opacity: 60%;
+  width: 1160px;
+  height: 95px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profileBtn {
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: lightblue;
+  background-color: linear-gradient(0deg, rgba(41,105,172,0) 0%, rgba(0,159,255,1) 83%, rgba(8,183,239,1) 100%);
+}
+
+.calendarBtn {
+  position: absolute;
+  translate: 70px;
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: lightblue;
+  background-color: linear-gradient(0deg, rgba(41,105,172,0) 0%, rgba(0,159,255,1) 83%, rgba(8,183,239,1) 100%);
+}
+
+.calendarStylizeBtn {
+  cursor: pointer;
+}
+
+.search-bar {
+  opacity: 80%;
+  cursor: text;
+  position: absolute;
+  translate: 145px;
+  width: 50%;
+  padding: 24px;
+  border-radius: 20px;
+  border: 2px solid gray;
+  font-size: 16px;
+}
+
+.days {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+
+.day {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  position: relative;
+  translate: 0px 27px;
+  flex: 1;
+  background-color: #d9d9d9;
+  border: none;
+  border-radius: 20px;
+  padding: 29px;
+  margin: 0 30px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.5s;
+  transition: transform 250ms;
+}
+
+.day.active {
+  background-color: #a59d9d;
+  color: white;
+  box-shadow: rgba(0, 0, 0, 0.5);
+}
+
+.day:hover {
+  box-shadow: rgba(0, 0, 0, 0.5);
+  transition: 0.5s;
+  transform: translateY(-3px);
+  background-color: #a59d9d;
+  color: white;
+}
+
+.notificationBar {
+  cursor: pointer;
+  position: relative;
+  translate: 0px 13px;
+  background-color: gainsboro;
+  box-shadow: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.notificationBtn {
+  width: 30px;
+  margin-right: 15px;
+}
+
+.dateDisplay {
+  position: absolute;
+  translate: 770px 5px;
+  font-size: 15px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.panels-container {
+  display: flex; /* Use flexbox to place the panels side by side */
+  justify-content: space-between;
+  gap: 20px; /* Space between panels */
+}
+
+.panel {
+  flex: 1; /* Each panel takes up equal space */
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.todo-list, .completed-list {
+  list-style: none;
+  padding: 0;
+}
+
+.todo-list li, .completed-list li {
+  margin-bottom: 15px;
+}
+
+.todo-list input[type="checkbox"], .completed-list input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+}
+
+.vl {
+  position: relative;
+  border-left: 6px solid green;
+  height: 500px;
+}
+
+.time-input{
+  z-index: 20;
+  position:absolute;
+  height:50%;
+  width:50%;
+  top:25%;
+  left:25%;
+  background-color:white;
+  border-radius:15px;
+  border-style:solid;
+  border-color:black;
+  border-width:5px;
+}
+
+.time-input h2{
+  text-decoration: underline;
+  position:absolute;
+  top:5%;
+  left:1%;
+  color:white;
+
+}
+
+#title{
+  position:absolute;
+  top:20%;
+  left:1%;
+  width:30%;
+  height:13%;
+}
+
+#description{
+  position:absolute;
+  top:20%;
+  left:35%;
+  width:30%;
+  height:13%;
+}
+
+#duration{
+  position:absolute;
+  top:75%;
+  left:1%;
+  width:30%;
+  height:13%;
+}
+
+#time{
+  position:absolute;
+  top:55%;
+  left:1%;
+  width:30%;
+  height:13%;
+}
+
+#time-label{
+  position:absolute;
+  top:40%;
+  left:1%;
+}
+
+#time-input{
+  display:none;
+}
+
+footer {
+  position: absolute;
+  bottom: 1px;
+  justify-content: center;
+  padding: 5px;
+  background-color: #45a1ff;
+  color: #fff;
+}
+
+form{
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 990px;
+  padding: 20px;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+label{
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+}
+
+input[type="time"] {
+  padding: 8px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%; /* Ensure the time inputs take the full width of the form */
+  box-sizing: border-box;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+input[type="time"]:focus {
+  border-color: #51d4ab;
+  outline: none; 
+}
+
+.save-sche {
+  padding: 10px;
+  background-color: #51d4ab;
+  color: white;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  border-radius: 20px;
+  transition: opacity 0.15s, transform 0.15s, background-color 0.15s;
+}
+
+.save-sche:hover {
+  opacity: 0.9;
+  transform: scale(1.03);
+  background-color: #45b398;
+}
+
+.see-more {
+  text-decoration: none;
+  color: black; 
+}
+
+.see-more:hover {
+  color: gray;
+}
+
+.see-less {
+  text-decoration: none;
+  color: black; 
+}
+
+.see-less:hover {
+  color: gray;
+}
+
+.schedule-list {
+  font-size: 18px; 
+  line-height: 1.5; 
+}
+
+.schedule-list li {
+  font-size: 40xpx; 
+  color: #333; 
+  margin-bottom: 10px;
+}
+
+.schedule-input {
+  width: 1000px; 
+  height: auto;
+  position: absolute;
+  z-index: 21;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+}
+
+/* This will apply a blur effect when the container has the 'blurred' class */
+.blurred {
+  filter: blur(5px);  /* Adjust the blur intensity as needed */
+  transition: filter 0.3s ease; /* Smooth transition */
+}
+
+.createB{
+  z-index:21;
+  border-radius:15px;
+  border: none;
+  height:45px;
+  width:80px;
+  padding: 10px;
+  background-color: #51d4ab;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.15s, background-color 0.15s;
+}
+
+.createB:hover {
+  opacity: 0.9;
+  transform: scale(1.03);
+  background-color: #45b398;
+}
+
+#genButton {
+  position: absolute;
+  bottom: 10px;  /* Distance from the bottom */
+  right: 50px;   /* Distance from the right */
+  width: 150px;      /* Increase the button's width */
+  height: 50px;      /* Increase the button's height */
+  font-size: 18px;   /* Increase the size of the text inside the button */
+  padding: 10px 20px; /* Add padding inside the button for a larger clickable area */
+  border-radius: 5px;
+}
+
+#schedule-list li {
+  margin-bottom: 10px; /* Adjust the value as needed */
+}

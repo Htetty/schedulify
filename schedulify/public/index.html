@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="frontpage.css">
+    <title>Schedulify</title>
+</head>
+<body id="body">
+    <div class="background" style="z-index:-1">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+     </div>
+     <div class="container" id="all">
+        <div class="calenderBg1"></div>
+        <div class="calenderBg2"></div>
+        <div class="header">
+            <div class="profileBtn" src="account_circle_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg" alt="Account profile">
+                <img src="account_circle_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg" alt="Account profile" width="50px" height="50px">
+            </div>
+            <div class="calendarBtn" src="calendar-check.svg" alt="Calendar">
+                <img src="calendar-check.svg" alt="Calendar" width="30px" height="30px" style="translate: 10px 10px">
+            </div>
+            <div class="calendarStylizeBtn" src="more_horiz_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg" alt="Stylize Calendar">
+                <img src="more_horiz_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg" alt="Stylize Calendar" width="20px" height="20px" style="translate: -1135px 62px">
+            </div>
+            <input type="text" class="search-bar" id="task-input" placeholder="+ Add a new task...">
+        </div>
+        <div class="dateDisplay"><h1 id="current-date"></h1></div>
+        <div class="days">
+            <button type="button" class="day">Mon</button>
+            <button type="button" class="day">Tues</button>
+            <button type="button" class="day">Wed</button>
+            <button type="button" class="day">Thurs</button>
+            <button type="button" class="day">Fri</button>
+            <button type="button" class="day">Sat</button>
+            <button type="button" class="day">Sun</button>
+        </div>
+<div class="notificationBar">
+        <img src="bell.svg" alt="Notification bell" width="30px" height="30px" style="translate: 0px"/>
+        <p id="greeting">Hello! Generate your schedule for the day:</p>
+    </div>
+
+
+    <div class="panel">
+        <h3>Schedule</h3>
+        <br>
+        <ul class="schedule-list" id="schedule-list">  
+        </ul>
+        <button onclick="generatePrompt()" class="createB">Create</button> 
+    </div>
+</div>
+
+
+
+<div class="time-input" id="time-input">
+    <h2 style="color:black">Create an event for Monday</h2>
+    <input type="text" id="title" placeholder="Task Name">
+    <input type="text" id="description" placeholder="Task Description">
+    <label for="duration" style="translate: 100px"></label>
+    <input type="number" id="duration" min="0" value="0" required> 
+    <label for="time" id="time-label" style="translate: 0px;"><p style="margin-right: 20px">How much of the day do you want to spend on this?</p></label>
+    <select name="time" id="time">
+        <option>Most of my time</option>
+        <option>A reasonable amount of my time</option>
+        <option>Not too long</option>
+    </select>
+    <button id="genButton" onclick="generate()">Add</button>
+</div>
+
+<div class="schedule-input" id="schedule-input">
+    <h3>Set Your Daily Schedule</h3>
+    <form id="schedule-form" method="POST">
+        <label>Wake Up Time: <input type="time" id="wakeUp" name="wakeUp" required></label><br>
+        <label>Lunch Time: <input type="time" id="lunch" name="lunch" required></label><br>
+        <label>Dinner Time: <input type="time" id="dinner" name="dinner" required></label><br>
+        <label>Sleep Time: <input type="time" id="sleep" name="sleep" required></label><br>
+        <input type="submit" class="save-sche" value="Save Schedule">
+    </form>
+</div>
+
+<script>
+    let tasks = [   ];
+
+    document.getElementById("task-input").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                var taskValue = event.target.value; 
+                document.getElementById("title").value = taskValue; 
+                document.getElementById("time-input").style.display = "block";
+                document.getElementById("all").style.opacity = "0.15"; // Dim background when task input is shown
+                event.target.value = "";
+            }
+        });
+    
+function closeDiv() {
+    var timeInput = document.getElementById("time-input");
+    var webBody = document.getElementById("all");
+
+    timeInput.style.display = "none"; // Hide the time-input div
+    webBody.style.opacity = "1"; // Reset the page opacity
+}
+
+function addTask() {
+    var taskInput = document.getElementById("task-input");
+    var taskValue = taskInput.value;
+    var timeInput = document.getElementById("time-input");
+    var webBody = document.getElementById("all");
+    var titleValue = document.getElementById("title").value;
+
+
+    //var newTask = document.createElement("li");
+    //var checkbox = document.createElement("input");
+    //checkbox.type = "checkbox";
+    //checkbox.addEventListener("change", moveTask); 
+
+    //newTask.appendChild(checkbox);
+    //newTask.appendChild(document.createTextNode(` ${taskValue}`));  // Using backticks for template literals
+
+    //var todoList = document.getElementById("todo-list");
+    //todoList.appendChild(newTask);
+
+    document.getElementById("time-input").style.display = "block";
+    webBody.style.opacity = "0.15";
+    timeInput.style.opacity = "1"; 
+
+    document.getElementById("title").value = taskValue;
+
+    taskInput.value = "";
+    document.getElementById("title").value = "";
+
+}
+
+function moveTask(event) {
+    var listItem = event.target.parentNode; 
+    var completedList = document.getElementById("completed-list");
+
+    completedList.appendChild(listItem);
+
+    event.target.disabled = true;
+}
+
+function generate() {
+const describeEvent = document.getElementById("description");
+const describeValue = describeEvent.value;
+const durationHours = parseInt(document.getElementById("duration").value);
+const titleEvent = document.getElementById("title");
+const titleValue = titleEvent.value;
+
+// Check if inputs are valid
+if (!titleValue || !describeValue || isNaN(durationHours)) {
+    return;
+}
+
+// Store task data in tasks array (if necessary)
+tasks.push({
+    title: titleValue,
+    description: describeValue,
+    duration: durationHours,    
+});
+
+const newTaskItem = document.createElement("li");
+
+const descriptionElement = document.createElement("p");
+descriptionElement.textContent = `${describeValue} Duration: ${durationHours} hours.`;
+descriptionElement.style.display = "none";
+
+// Create 'See more' link with the title value included
+const seeMoreLink = document.createElement("a");
+seeMoreLink.classList.add("see-more");
+seeMoreLink.href = "#";
+seeMoreLink.textContent = `${titleValue}------See more↲`;
+seeMoreLink.style.cursor = "pointer";
+
+// Add event listener to toggle description visibility
+seeMoreLink.addEventListener("click", function(event) {
+    event.preventDefault();
+
+    // Toggle the visibility of the description
+    if (descriptionElement.style.display === "none") {
+        descriptionElement.style.display = "block";
+        seeMoreLink.textContent = `${titleValue}------See less↰`;
+    } else {
+        descriptionElement.style.display = "none";
+        seeMoreLink.textContent = `${titleValue}------See more↲`;
+    }
+});
+
+newTaskItem.appendChild(seeMoreLink);
+newTaskItem.appendChild(descriptionElement);
+
+const scheduleList = document.getElementById("schedule-list");
+scheduleList.appendChild(newTaskItem);
+
+titleEvent.value = "";  
+describeEvent.value = "";  
+document.getElementById("duration").value = "0";  
+document.getElementById("time").selectedIndex = "0";  
+
+closeDiv();
+}
+
+// Capitalize words for title and description
+document.getElementById("title").addEventListener("input", function() {
+    this.value = capitalizeWords(this.value);
+});
+
+document.getElementById("description").addEventListener("input", function() {
+    this.value = capitalizeWords(this.value);
+});
+
+document.getElementById("task-input").addEventListener("input", function() {
+    this.value = capitalizeWords(this.value);
+});
+
+// Function to capitalize the entire string
+function capitalizeWords(str) {
+    return str.toUpperCase(); // Capitalizes everything
+}
+
+
+async function sendToGeminiAI(prompt) {
+    try {
+        console.log("Sending this prompt to server:", prompt);
+
+        const response = await fetch('/analyze-task', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ prompt: prompt })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to process task with Gemini AI');
+        }
+
+        const parsedTask = await response.json();
+
+        console.log("Response from Gemini AI:", parsedTask);  // Log the response for debugging
+
+        // Get the AI generated schedule
+        const scheduleOutput = parsedTask.suggestedSchedule;
+
+        // Replace newline characters with <br> for HTML formatting
+        const formattedOutput = scheduleOutput.replace(/\n/g, "<br>");
+
+        // Update the DOM with the formatted output
+        document.getElementById('schedule-list').innerHTML = formattedOutput;
+
+    } catch (error) {
+        console.error('Error interacting with Gemini AI:', error);
+    }
+}
+
+
+
+function extractTimeFromResponse(geminiResponse) {
+    const timeMatch = geminiResponse.match(/(\d{1,2}:\d{2})/); 
+    return timeMatch ? timeMatch[1] : 'Unknown time'; 
+}
+
+function addToSchedule(parsedTask) {
+    const { taskName } = parsedTask;
+
+    const wakeUpTime = new Date(new Date().toDateString() + ' ' + document.getElementById('wakeUp').value).getTime();
+const lunchTime = new Date(new Date().toDateString() + ' ' + document.getElementById('lunch').value).getTime();
+const dinnerTime = new Date(new Date().toDateString() + ' ' + document.getElementById('dinner').value).getTime();
+const sleepTime = new Date(new Date().toDateString() + ' ' + document.getElementById('sleep').value).getTime();
+const newTask = document.createElement('li');
+newTask.textContent = `${taskName}`;
+
+let bestSlot = findBestSlot(wakeUpTime, lunchTime, dinnerTime, sleepTime);
+
+const scheduleList = document.getElementById('schedule-list');
+
+if (bestSlot === 'beforeLunch') {
+    scheduleList.insertBefore(newTask, scheduleList.children[1]); 
+} else if (bestSlot === 'beforeDinner') {
+    scheduleList.insertBefore(newTask, scheduleList.children[2]); 
+} else if (bestSlot === 'beforeSleep') {
+    scheduleList.insertBefore(newTask, scheduleList.children[3]); 
+} else { 
+    scheduleList.appendChild(newTask); 
+}
+}
+
+
+function generatePrompt() {
+    const wakeUp = document.getElementById('wakeUp').value;
+    const lunch = document.getElementById('lunch').value;
+    const dinner = document.getElementById('dinner').value;
+    const sleep = document.getElementById('sleep').value;
+
+    if (!wakeUp || !lunch || !dinner || !sleep) {
+        alert('Please provide specific times for Wake up, Lunch, Dinner, and Sleep.');
+        return;
+    }
+
+    console.log("Wake Up:", wakeUp, "Lunch:", lunch, "Dinner:", dinner, "Sleep:", sleep);
+
+    let prompt = `My schedule for today is: 
+        Wake up: ${wakeUp}
+        Lunch: ${lunch}
+        Dinner: ${dinner}
+        Sleep: ${sleep}
+
+        My tasks are:`;
+
+    tasks.forEach(task => {
+        prompt += `\n- ${task.description} (Duration: ${task.duration} hour${task.duration > 1 ? 's' : ''})`;
+    });
+
+    prompt += `\n\nPlease provide me with an optimized schedule that includes the new task, while respecting the existing schedule as much as possible. 
+Ensure that there are breaks between tasks to allow for rest, and consider the following guidelines:
+- Short breaks (5-10 minutes) after every 1 hour of work.
+- Longer breaks (30-60 minutes) for meals or relaxation, such as during lunch or dinner.
+- Avoid scheduling long, intensive tasks back-to-back without a break.
+- **If there is not enough time to include breaks, prioritize completing the tasks, but note the lack of available time for breaks.**
+
+Output the schedule as a list of items, each with a time and a task, and include breaks where appropriate. If breaks cannot be added due to time constraints, skip them and provide a note about the lack of time for breaks. Output each task on a **new line**.
+
+Example:
+7:00 AM: Wake up
+8:00 AM: Prepare breakfast
+9:00 AM: Task 1
+10:00 AM: 10-minute break (if time allows)
+10:10 AM: Task 2
+...`;
+
+    sendToGeminiAI(prompt); 
+
+    console.log("Prompt sent to Gemini AI:", prompt); 
+
+    document.getElementById("greeting").innerHTML = "Here is your schedule for the day! :"
+}
+
+function convertTimeToMs(timeString) {
+    if (!timeString) {
+        console.error("Error: convertTimeToMs received an invalid timeString:", timeString);
+        return null;
+    }
+
+    const [hours, minutes] = timeString.split(':').map(Number);
+    return hours * 3600000 + minutes * 60000; 
+}
+
+function findBestSlot(wakeUpTime, lunchTime, dinnerTime, sleepTime, taskDurationMS) {
+    let bestSlot = 'afterSleep'; 
+
+    if (wakeUpTime + taskDurationMS < lunchTime) {
+        bestSlot = 'beforeLunch';
+    } else if (lunchTime + taskDurationMS < dinnerTime) {
+        bestSlot = 'beforeDinner';
+    } else if (dinnerTime + taskDurationMS < sleepTime) {
+        bestSlot = 'beforeSleep';
+    }
+    return bestSlot;
+}
+
+function loadSavedSchedule() {
+    fetch('http://localhost:3000/get-schedule')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(schedule => {
+        if (schedule) {
+          document.getElementById('schedule-list').innerHTML = `
+            <li>Wake up: ${schedule.wakeUp}</li>
+            <li>Lunch: ${schedule.lunch}</li>
+            <li>Dinner: ${schedule.dinner}</li>
+            <li>Sleep: ${schedule.sleep}</li>
+          `;
+        }
+      })
+      .catch(err => console.error('Error fetching schedule:', err));
+  }
+
+window.onload = function() {
+    document.getElementById('all').classList.add('blurred');
+    loadSavedSchedule();
+};
+        
+document.getElementById('schedule-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+
+    const scheduleData = {
+        wakeUp: formData.get('wakeUp'),
+        lunch: formData.get('lunch'),
+        dinner: formData.get('dinner'),
+        sleep: formData.get('sleep')
+    };
+
+    if (!scheduleData.wakeUp || !scheduleData.lunch || !scheduleData.dinner || !scheduleData.sleep) {
+        alert('Please fill out all the fields.');
+        return;
+    }
+    fetch('http://localhost:3000/set-schedule', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(scheduleData)
+        })
+    .then(response => response.text())
+    .then(data => {
+    
+        document.getElementById('schedule-list').innerHTML = `
+            <li>Wake up: ${scheduleData.wakeUp}</li>
+            <li>Lunch: ${scheduleData.lunch}</li>
+            <li>Dinner: ${scheduleData.dinner}</li>
+            <li>Sleep: ${scheduleData.sleep}</li>
+        `;
+        document.getElementById('schedule-input').style.display = 'none'; 
+        document.getElementById('all').classList.remove('blurred'); 
+
+        localStorage.setItem('scheduleSaved', 'true');
+    })
+    .catch(error => {
+        console.error('Error saving schedule:', error);
+        alert('There was an error saving the schedule.');
+    });
+});
+
+document.getElementById("task-input").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault(); 
+
+        var taskValue = event.target.value; 
+
+        if (taskValue.trim() !== "") {
+            document.getElementById("title").value = taskValue; 
+            document.getElementById("time-input").style.display = "block"; 
+            document.getElementById("all").style.opacity = "0.15"; 
+
+            event.target.value = "";
+        }
+    }
+});
+
+document.getElementById("task-input").addEventListener("input", function(event) {
+    var taskValue = event.target.value;
+    document.getElementById("title").value = taskValue; 
+});
+
+function updateDateDisplay() {
+    const dateElement = document.getElementById("current-date");
+    
+    const currentDate = new Date();
+
+    const options = { 
+        weekday: 'long', // e.g., Monday
+        year: 'numeric', // e.g., 2024
+        month: 'long',   // e.g., October
+        day: 'numeric'   // e.g., 19
+    };
+
+    const formattedDate = currentDate.toLocaleDateString(undefined, options);
+
+    dateElement.textContent = `${formattedDate}.`;
+}
+
+updateDateDisplay();
+
+    </script>
+</body>
+</html>
